@@ -1,21 +1,32 @@
+var path = require('path');
+var webpack = require('webpack');
+
 module.exports = {
-	devtool: 'eval-source-map',
-	entry: {
-		main: [
-			'./src/main.js'
-		]
-	},
-	output: {
-		filename: './public/[name].js'
-	},
-	module: {
-		loaders: [
-			{
-				test: /\.jsx?$/,
-				exclude: /node_modules/,
-				loader: 'babel-loader',
-				query: { presets: ['es2015','react', 'stage-0'] }
-			}
-		]
-	}
-}
+  devtool: 'eval',
+  entry: [
+    'webpack-dev-server/client?http://localhost:3000',
+    'webpack/hot/only-dev-server',
+    './src/main.js'
+  ],
+  output: {
+    path: path.join(__dirname, 'dist'),
+    filename: 'bundle.js',
+    publicPath: '/static/'
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin()
+  ],
+  module: {
+    loaders: [{
+      test: /\.jsx?$/,
+      loaders: ['react-hot', 'babel'],
+      include: path.join(__dirname, 'src')
+    },
+    {
+      test: /\.scss$/,
+      include: path.join(__dirname, 'src'),
+      loaders: ['style' , 'css', 'sass']
+    }
+    ]
+  }
+};
